@@ -9,9 +9,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.nikola.premiere.di.networkModule
 import com.nikola.premiere.domain.repository.MovieRepository
+import com.nikola.premiere.presentation.movies_list.MoviesScreen
+import com.nikola.premiere.presentation.movies_list.MoviesViewModel
+import com.nikola.premiere.presentation.navigation.AppNavigation
 import kotlinx.coroutines.launch
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun App() {
@@ -19,8 +23,8 @@ fun App() {
     KoinApplication(application = {
         modules(networkModule)
     }) {
-        MaterialTheme {
-            TestScreen()
+        MaterialTheme(colorScheme = darkColorScheme()) {
+            AppNavigation()
         }
     }
 }

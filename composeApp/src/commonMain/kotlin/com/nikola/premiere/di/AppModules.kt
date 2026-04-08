@@ -1,7 +1,11 @@
 package com.nikola.premiere.di
 
 import com.nikola.premiere.data.remote.MoviesApi
+import com.nikola.premiere.domain.usecase.GetMoviesUseCase
 import com.nikola.premiere.domain.repository.MovieRepository
+import com.nikola.premiere.domain.usecase.GetMovieDetailsUseCase
+import com.nikola.premiere.presentation.details.DetailsViewModel
+import com.nikola.premiere.presentation.movies_list.MoviesViewModel
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.defaultRequest
@@ -10,6 +14,7 @@ import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+import org.koin.core.module.dsl.viewModel
 
 val networkModule = module {
 
@@ -42,4 +47,14 @@ val networkModule = module {
     single<MovieRepository> {
         com.nikola.premiere.data.repository.MovieRepositoryImpl(api = get())
     }
+    factory { GetMoviesUseCase(repository = get()) }
+
+    // 2. ViewModel sada prima GetMoviesUseCase umesto Repozitorijuma
+    viewModel { MoviesViewModel(getMoviesUseCase = get()) }
+
+    factory { GetMovieDetailsUseCase(repository = get()) }
+
+    // 2. Registrujemo ViewModel (SavedStateHandle se ubacuje automatski!)
+    viewModel { DetailsViewModel(getMovieDetailsUseCase = get(), savedStateHandle = get()) }
+
 }
