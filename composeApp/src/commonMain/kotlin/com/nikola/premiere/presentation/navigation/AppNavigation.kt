@@ -16,6 +16,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.nikola.premiere.presentation.details.DetailsScreen
 import com.nikola.premiere.presentation.details.DetailsViewModel
+import com.nikola.premiere.presentation.filters.FiltersScreen
+import com.nikola.premiere.presentation.filters.FiltersViewModel
 import com.nikola.premiere.presentation.movies_list.MoviesScreen
 import com.nikola.premiere.presentation.movies_list.MoviesViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -48,12 +50,19 @@ fun AppNavigation (
         composable(
             route = "filters",
         ) {
-            // TODO: ovde ubaciti filtewr view model i screen
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Button(onClick = { navController.navigateUp() }) {
-                    Text("Ovo je Filter Ekran. Nazad")
+            val filtersViewModel = koinViewModel<FiltersViewModel>()
+            FiltersScreen(
+                viewModel = filtersViewModel,
+                onNavigateBack = {
+                    navController.navigateUp()
+                },
+                onApplyFilters = {effectPackage->
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("active_filters",effectPackage)
+                    navController.navigateUp()
                 }
-            }
+            )
         }
         composable(
             route = "details/{$MOVIE_ID}",
@@ -66,7 +75,6 @@ fun AppNavigation (
         ) {
             // Obrisali smo backStackEntry.arguments?.getString() jer nam u UI-ju ne treba!
             val viewModel = koinViewModel<DetailsViewModel>()
-            // TODO: Ovde ćemo ubaciti DetailsViewModel koji će sam pročitati ID
             DetailsScreen(
                 viewModel = viewModel,
                 onNavigateBack = { navController.navigateUp() }

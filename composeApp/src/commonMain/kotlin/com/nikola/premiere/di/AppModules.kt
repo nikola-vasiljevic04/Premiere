@@ -3,8 +3,10 @@ package com.nikola.premiere.di
 import com.nikola.premiere.data.remote.MoviesApi
 import com.nikola.premiere.domain.usecase.GetMoviesUseCase
 import com.nikola.premiere.domain.repository.MovieRepository
+import com.nikola.premiere.domain.usecase.GetGenresUseCase
 import com.nikola.premiere.domain.usecase.GetMovieDetailsUseCase
 import com.nikola.premiere.presentation.details.DetailsViewModel
+import com.nikola.premiere.presentation.filters.FiltersViewModel
 import com.nikola.premiere.presentation.movies_list.MoviesViewModel
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
@@ -54,7 +56,7 @@ val networkModule = module {
 
     factory { GetMovieDetailsUseCase(repository = get()) }
 
-    // 2. Registrujemo ViewModel (SavedStateHandle se ubacuje automatski!)
     viewModel { DetailsViewModel(getMovieDetailsUseCase = get(), savedStateHandle = get()) }
-
+    factory { GetGenresUseCase(repository = get()) }
+    viewModel { FiltersViewModel(getGenresUseCase = get()) }
 }
