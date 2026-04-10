@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -12,6 +13,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,29 +26,51 @@ import androidx.compose.ui.unit.sp
 fun SearchSection(
     searchQuery: String,
     onQueryChange: (String) -> Unit
-){
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text("SEARCH BY TITLE", color = Color.Gray, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(8.dp))
+        // Naslov sekcije - na maketi je čistije bele boje i malo veći
+        Text(
+            text = "SEARCH",
+            color = Color.White,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(12.dp))
 
-        OutlinedTextField(
+        TextField(
             value = searchQuery,
-            onValueChange = onQueryChange, // Šalje svako ukucano slovo nazad gore
-            placeholder = { Text("e.g. Batman", color = Color.DarkGray) },
-
-            // Lupa sa leve strane
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search Icon",
-                    tint = Color.Gray
+            onValueChange = onQueryChange,
+            placeholder = {
+                Text(
+                    "Search by movie title...",
+                    color = Color.Gray,
+                    fontSize = 14.sp
                 )
             },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            shape = RoundedCornerShape(12.dp), // Blago zaobljene ivice kao na slici
+            singleLine = true,
+            colors = TextFieldDefaults.colors(
+                // Glavna podešavanja boja
+                focusedContainerColor = Color(0xFF1F2033), // Tamna pozadina polja
+                unfocusedContainerColor = Color(0xFF1F2033),
+                disabledContainerColor = Color(0xFF1F2033),
 
-            // "X" dugme sa desne strane (pojavljuje se samo ako tekst nije prazan)
+                // Sakrivanje donje linije (indikatora)
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+
+                // Boje teksta i kursora
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                cursorColor = Color(0xFFE50914)
+            ),
             trailingIcon = {
                 if (searchQuery.isNotEmpty()) {
-                    IconButton(onClick = { onQueryChange("") }) { // Klik na X šalje prazan string
+                    IconButton(onClick = { onQueryChange("") }) {
                         Icon(
                             imageVector = Icons.Default.Clear,
                             contentDescription = "Clear Search",
@@ -53,16 +78,7 @@ fun SearchSection(
                         )
                     }
                 }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true, // Sprečava da polje raste u više redova (kao Enter na tastaturi)
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                focusedBorderColor = Color.LightGray,
-                unfocusedBorderColor = Color.DarkGray,
-                cursorColor = Color(0xFFE50914) // Netflix crveni kursor za lepši efekat
-            )
+            }
         )
     }
 }
