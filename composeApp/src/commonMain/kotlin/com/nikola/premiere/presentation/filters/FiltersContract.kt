@@ -1,7 +1,5 @@
 package com.nikola.premiere.presentation.filters
-
 import com.nikola.premiere.data.model.Genre
-
 interface FiltersContract {
 
     data class State(
@@ -31,6 +29,7 @@ interface FiltersContract {
     }
     sealed interface Effect{
         data object NavigateBack: Effect
+        //@Parcelize
         data class NavigateBackWithFilters(
             val query: String,
             val genreId: Int?,

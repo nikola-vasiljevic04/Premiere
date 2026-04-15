@@ -94,7 +94,11 @@ class FiltersViewModel(
         }
         try {
             val genres = getGenresUseCase()
-            _state.update { it.copy(genreState = FiltersContract.GenreState.Success(genres)) }
+            if (genres.isEmpty()) {
+                _state.update { it.copy(genreState = FiltersContract.GenreState.Error("Nema žanrova u bazi")) }
+            } else {
+                _state.update { it.copy(genreState = FiltersContract.GenreState.Success(genres)) }
+            }
         }catch (e: Exception){
             e.printStackTrace()
             _state.update {

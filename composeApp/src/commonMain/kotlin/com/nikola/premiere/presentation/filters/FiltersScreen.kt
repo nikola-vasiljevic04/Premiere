@@ -1,5 +1,6 @@
 package com.nikola.premiere.presentation.filters
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nikola.premiere.presentation.filters.components.GenresSection
+import com.nikola.premiere.presentation.filters.components.RatingSection
 import com.nikola.premiere.presentation.filters.components.SearchSection
 import com.nikola.premiere.presentation.filters.components.YearSection
 
@@ -74,7 +77,6 @@ fun FiltersScreen(
             )
         },
         bottomBar = {
-            // 3. Na dnu sada ostaje SAMO dugme za primenu filtera
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -90,12 +92,22 @@ fun FiltersScreen(
             }
         }
     ){paddingValues ->
-        LazyColumn (modifier = Modifier.fillMaxSize().padding(paddingValues).padding(horizontal = 16.dp)){
+        LazyColumn (
+            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(horizontal = 16.dp) ,
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+            ){
+            item { Spacer(modifier = Modifier.height(8.dp)) }
             item {
-                Spacer(modifier = Modifier.height(16.dp))
                 SearchSection(
                     searchQuery = state.searchQuery,
                     onQueryChange = { viewModel.setIntent(FiltersContract.Intent.ChangeSearchQuery(it)) }
+                )
+            }
+            item {
+                GenresSection(
+                    genreState = state.genreState,
+                    selectedGenreId = state.selectedGenreId,
+                    onGenreSelected = {viewModel.setIntent(FiltersContract.Intent.SelectGenre(it))}
                 )
             }
             item {
@@ -104,6 +116,12 @@ fun FiltersScreen(
                     maxYear = state.maxYear?.toString() ?: "",
                     onMinYearChange = { viewModel.setIntent(FiltersContract.Intent.SetMinYear(it)) },
                     onMaxYearChange = { viewModel.setIntent(FiltersContract.Intent.SetMaxYear(it)) }
+                )
+            }
+            item {
+                RatingSection(
+                    minRating = state.minRating,
+                    onRatingChange = {viewModel.setIntent(FiltersContract.Intent.SetMinRating(it))}
                 )
             }
 
