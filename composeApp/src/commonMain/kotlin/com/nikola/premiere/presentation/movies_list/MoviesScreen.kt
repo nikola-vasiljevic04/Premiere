@@ -248,7 +248,7 @@ fun MovieCard(
                 )
             }
 
-            // Žanrovi (Prikazujemo prva 2 da ne bi prelivali karticu)
+            // zanrovi
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 movie.genres.take(2).forEach { genre ->
                     SuggestionChip(

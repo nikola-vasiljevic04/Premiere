@@ -25,10 +25,8 @@ fun RatingSection(
         Text("MINIMUM RATING", color = Color.Gray, fontSize = 12.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Magija za zaokruživanje: 8.54321 -> 85.4321 -> 85 -> 8.5
         val displayRating = (minRating * 10.0).roundToInt() / 10.0
 
-        // Ispisujemo 0.0 levo, izabranu ocenu u sredini, i 10.0 desno
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -40,12 +38,12 @@ fun RatingSection(
 
         Slider(
             value = minRating,
-            onValueChange = onRatingChange, // Šaljemo tačan Float nazad u ViewModel
-            valueRange = 0f..10f, // Ograničavamo slajder od 0 do 10
+            onValueChange = onRatingChange,
+            valueRange = 0f..10f,
             colors = SliderDefaults.colors(
-                thumbColor = Color(0xFFE50914), // Netflix crvena za kružić
-                activeTrackColor = Color(0xFFE50914), // Netflix crvena za popunjeni deo
-                inactiveTrackColor = Color.DarkGray // Tamno siva za prazan deo
+                thumbColor = Color(0xFFE50914),
+                activeTrackColor = Color(0xFFE50914),
+                inactiveTrackColor = Color.DarkGray
             )
         )
     }

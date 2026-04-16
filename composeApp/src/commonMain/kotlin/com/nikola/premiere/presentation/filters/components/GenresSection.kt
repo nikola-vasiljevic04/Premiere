@@ -32,10 +32,8 @@ fun GenresSection(
         Text("GENRES", color = Color.Gray, fontSize = 12.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
 
-        // U zavisnosti od stanja API poziva, crtamo različit UI
         when (genreState) {
             is FiltersContract.GenreState.Loading -> {
-                // Centrirani kružić koji se vrti
                 Column(
                     modifier = Modifier.fillMaxWidth().padding(32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -45,7 +43,6 @@ fun GenresSection(
             }
 
             is FiltersContract.GenreState.Error -> {
-                // Crveni tekst sa greškom
                 Text(
                     text = genreState.message,
                     color = Color.Red,
@@ -54,8 +51,6 @@ fun GenresSection(
             }
 
             is FiltersContract.GenreState.Success -> {
-                // FlowRow služi da elemente ređa s leva na desno,
-                // a kad nema mesta, sam prelomi u novi red!
                 FlowRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -74,16 +69,15 @@ fun GenresSection(
                                 )
                             },
                             colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = Color(0xFFE50914), // Netflix crvena za izabran
-                                containerColor = Color(0xFF222222) // Tamno siva za neizabran
+                                selectedContainerColor = Color(0xFFE50914),
+                                containerColor = Color(0xFF222222)
                             ),
-                            border = null // Sklanjamo onaj ružan sivi okvir
+                            border = null
                         )
                     }
                 }
             }
         }
-        // Veliki razmak na dnu da donje "Apply" dugme ne bi preklopilo žanrove!
-        Spacer(modifier = Modifier.height(100.dp))
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }

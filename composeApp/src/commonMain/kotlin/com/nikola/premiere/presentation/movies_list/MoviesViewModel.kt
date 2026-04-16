@@ -3,6 +3,8 @@ package com.nikola.premiere.presentation.movies_list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nikola.premiere.domain.usecase.GetMoviesUseCase
+import com.nikola.premiere.presentation.state.FilterData
+import com.nikola.premiere.presentation.state.FilterManager
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +15,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class MoviesViewModel (
-    private val getMoviesUseCase: GetMoviesUseCase
+    private val getMoviesUseCase: GetMoviesUseCase,
+    private val filterManager: FilterManager
 ): ViewModel(){
     private val _state = MutableStateFlow<MoviesContract.State>(MoviesContract.State.Loading)
     val state: StateFlow<MoviesContract.State>  = _state.asStateFlow()
@@ -40,16 +43,22 @@ class MoviesViewModel (
                 handleIntent(intent)
             }
         }
-        setIntent(MoviesContract.Intent.LoadMovies)
+        viewModelScope.launch {
+            filterManager.activeFilters.collect { noviFilteri ->
+                // Okinuće se na samom početku (prazni filteri)
+                // i SVAKI PUT kad korisnik klikne "Apply" na Filter ekranu!
+                fetchMovies(sortBy = currentSortValue, filteri = noviFilteri)
+            }
+        }
     }
     private suspend fun handleIntent(intent: MoviesContract.Intent) {
         when (intent) {
             is MoviesContract.Intent.LoadMovies -> {
-                fetchMovies(sortBy = currentSortValue)
+                fetchMovies(sortBy = currentSortValue, filteri = filterManager.activeFilters.value)
             }
             is MoviesContract.Intent.ChangeSort -> {
                 currentSortValue = intent.sortBy
-                fetchMovies(sortBy = currentSortValue)
+                fetchMovies(sortBy = currentSortValue,filteri = filterManager.activeFilters.value)
             }
         }
     }
@@ -59,17 +68,21 @@ class MoviesViewModel (
         }
     }
 
-    private suspend fun fetchMovies(sortBy: String) {
-        // 1. ZUM! Sve nestaje, pojavljuje se krug za učitavanje
+    private suspend fun fetchMovies(sortBy: String,filteri: FilterData) {
         setState { MoviesContract.State.Loading }
         try {
-            val response = getMoviesUseCase(sortBy = sortBy)
+            val response = getMoviesUseCase(
+                sortBy = sortBy,
+                query = filteri.query,
+                genreId = filteri.genreId,
+                minRating = filteri.minRating,
+                minYear = filteri.minYear,
+                maxYear = filteri.maxYear
+            )
 
             if (response.items.isEmpty()) {
-                // 2a. Nema rezultata
                 setState {MoviesContract.State.Empty}
             } else {
-                // 2b. Sve je super, iscrtaj listu
                 setState { MoviesContract.State.Success(
                     movies = response.items,
                     currentSort = sortBy,
@@ -79,7 +92,6 @@ class MoviesViewModel (
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            // 2c. Nešto je puklo, iscrtaj error ekran
             setState {
                 MoviesContract.State.Error(
                     message = e.message ?: "Došlo je do greške pri učitavanju."

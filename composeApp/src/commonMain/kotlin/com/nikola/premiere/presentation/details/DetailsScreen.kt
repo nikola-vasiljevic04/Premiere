@@ -37,7 +37,7 @@ fun DetailsScreen(
         }
     }
     Scaffold(
-        containerColor = Color(0xFF121212) // Fiksna tamno siva pozadina
+        containerColor = Color(0xFF121212)
     ) { paddingValues ->
         Box(
             modifier = Modifier

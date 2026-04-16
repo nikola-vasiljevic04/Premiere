@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nikola.premiere.domain.usecase.GetGenresUseCase
 import com.nikola.premiere.presentation.movies_list.MoviesContract
+import com.nikola.premiere.presentation.state.FilterData
+import com.nikola.premiere.presentation.state.FilterManager
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class FiltersViewModel(
-    private val getGenresUseCase: GetGenresUseCase
+    private val getGenresUseCase: GetGenresUseCase,
+    private val filterManager: FilterManager
 ): ViewModel() {
     private val _state = MutableStateFlow(FiltersContract.State())
     val state: StateFlow<FiltersContract.State> = _state.asStateFlow()
@@ -37,10 +40,21 @@ class FiltersViewModel(
     }
     init {
         viewModelScope.launch {
-            intentFlow.collect {
-                intent-> handleIntent(intent)
+            intentFlow.collect { intent ->
+                handleIntent(intent)
             }
         }
+        val savedFilters = filterManager.activeFilters.value
+        _state.update { currentState ->
+            currentState.copy(
+                searchQuery = savedFilters.query ?: "",
+                selectedGenreId = savedFilters.genreId,
+                minRating = savedFilters.minRating,
+                minYear = savedFilters.minYear,
+                maxYear = savedFilters.maxYear
+            )
+        }
+        setIntent(FiltersContract.Intent.LoadGenres)
     }
 
     private suspend fun handleIntent(intent: FiltersContract.Intent) {
@@ -63,6 +77,7 @@ class FiltersViewModel(
                 _state.update { it.copy(maxYear = intent.year) }
             }
             FiltersContract.Intent.ClearFilters -> {
+                filterManager.clearFilters()
                 _state.update {
                     it.copy(
                         searchQuery = "",
@@ -76,14 +91,18 @@ class FiltersViewModel(
 
             FiltersContract.Intent.ApplyFilters ->{
                 val currentState = _state.value
-                val effectToSend =  FiltersContract.Effect.NavigateBackWithFilters(
-                    query = currentState.searchQuery,
-                    genreId = currentState.selectedGenreId,
-                    minRating = currentState.minRating,
-                    minYear = currentState.minYear,
-                    maxYear = currentState.maxYear
+                filterManager.updateFilters(
+                    FilterData(
+                        query = currentState.searchQuery,
+                        genreId = currentState.selectedGenreId,
+                        minRating = currentState.minRating,
+                        minYear = currentState.minYear,
+                        maxYear = currentState.maxYear
+                    )
                 )
-                _effect.emit(effectToSend)
+                viewModelScope.launch {
+                    _effect.emit(FiltersContract.Effect.NavigateBack)
+                }
             }
 
         }

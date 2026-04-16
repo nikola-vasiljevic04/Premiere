@@ -65,10 +65,8 @@ fun YearDropdown(
     onYearSelected: (Int?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Stanje koje prati da li je meni otvoren ili zatvoren
     var expanded by remember { mutableStateOf(false) }
 
-    // Generišemo listu godina od 2025 unazad do 1900
     val years = remember { (1900..2025).toList().reversed() }
 
     ExposedDropdownMenuBox(
@@ -78,11 +76,10 @@ fun YearDropdown(
     ) {
         OutlinedTextField(
             value = selectedValue,
-            onValueChange = {}, // Ostavljamo prazno jer je readOnly
-            readOnly = true, // Sprečava otvaranje tastature!
+            onValueChange = {},
+            readOnly = true,
             label = { Text(label, color = Color.Gray) },
             trailingIcon = {
-                // Dodaje malu strelicu koja se okreće kad se meni otvori
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
             },
             colors = OutlinedTextFieldDefaults.colors(
@@ -90,16 +87,15 @@ fun YearDropdown(
                 unfocusedTextColor = Color.White,
                 focusedTrailingIconColor = Color.White,
                 unfocusedTrailingIconColor = Color.Gray,
-                focusedBorderColor = Color.LightGray // Da ne vrišti primarna boja kad se fokusira
+                focusedBorderColor = Color.LightGray
             ),
-            modifier = Modifier.menuAnchor() // OBAVEZNO za M3 padajuće menije
+            modifier = Modifier.menuAnchor()
         )
 
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            // Opcija da korisnik poništi (očisti) izabranu godinu
             DropdownMenuItem(
                 text = { Text("Any year") },
                 onClick = {
@@ -107,7 +103,6 @@ fun YearDropdown(
                     expanded = false
                 }
             )
-            // Izlistavamo sve generisane godine
             years.forEach { year ->
                 DropdownMenuItem(
                     text = { Text(year.toString()) },

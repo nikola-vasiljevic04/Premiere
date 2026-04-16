@@ -29,13 +29,5 @@ interface FiltersContract {
     }
     sealed interface Effect{
         data object NavigateBack: Effect
-        //@Parcelize
-        data class NavigateBackWithFilters(
-            val query: String,
-            val genreId: Int?,
-            val minRating: Float,
-            val minYear: Int?,
-            val maxYear: Int?
-        ): Effect
     }
 }

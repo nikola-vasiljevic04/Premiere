@@ -40,7 +40,6 @@ class DetailsViewModel(
                 handleIntent(intent)
             }
         }
-        // Odmah po paljenju ekrana pokrećemo učitavanje
         setIntent(DetailsContract.Intent.LoadDetails)
     }
     fun setIntent(intent: DetailsContract.Intent) {
@@ -58,7 +57,6 @@ class DetailsViewModel(
     private suspend fun fetchDetails() {
         setState { DetailsContract.State.Loading }
         try {
-            // Zovemo tvoj UseCase koji sve radi paralelno
             val fullData = getMovieDetailsUseCase(movieId = movieId)
 
             setState { DetailsContract.State.Success(data = fullData) }

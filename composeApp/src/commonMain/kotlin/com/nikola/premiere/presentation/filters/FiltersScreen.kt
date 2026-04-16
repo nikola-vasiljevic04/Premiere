@@ -3,10 +3,13 @@ package com.nikola.premiere.presentation.filters
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -40,14 +43,12 @@ import com.nikola.premiere.presentation.filters.components.YearSection
 fun FiltersScreen(
     viewModel: FiltersViewModel,
     onNavigateBack:()-> Unit,
-    onApplyFilters:(FiltersContract.Effect.NavigateBackWithFilters)-> Unit
 ){
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit){
         viewModel.effect.collect {
             effect -> when(effect){
-                is FiltersContract.Effect.NavigateBackWithFilters -> onApplyFilters(effect)
                 is FiltersContract.Effect.NavigateBack -> onNavigateBack()
             }
         }
@@ -56,7 +57,6 @@ fun FiltersScreen(
         containerColor = Color(0xFF121212),
         topBar = {
             TopAppBar(
-                // 1. Naslov promenjen da odgovara slici
                 title = {
                     Text("Filter Movies", color = Color.White, fontWeight = FontWeight.Bold)
                 },
@@ -65,7 +65,7 @@ fun FiltersScreen(
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
                 },
-                // 2. Dodato dugme "Clear All" u gornji desni ugao!
+
                 actions = {
                     TextButton(onClick = { viewModel.setIntent(FiltersContract.Intent.ClearFilters) }) {
                         Text("Clear All", color = Color.Red, fontSize = 16.sp) // Crvena boja kao na slici
@@ -80,6 +80,8 @@ fun FiltersScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+
                     .padding(16.dp)
             ) {
                 Button(

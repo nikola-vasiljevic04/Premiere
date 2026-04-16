@@ -55,12 +55,6 @@ fun AppNavigation (
                 viewModel = filtersViewModel,
                 onNavigateBack = {
                     navController.navigateUp()
-                },
-                onApplyFilters = {effectPackage->
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("active_filters",effectPackage)
-                    navController.navigateUp()
                 }
             )
         }
@@ -73,7 +67,6 @@ fun AppNavigation (
                 }
             ),
         ) {
-            // Obrisali smo backStackEntry.arguments?.getString() jer nam u UI-ju ne treba!
             val viewModel = koinViewModel<DetailsViewModel>()
             DetailsScreen(
                 viewModel = viewModel,

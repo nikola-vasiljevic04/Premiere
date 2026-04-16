@@ -28,7 +28,6 @@ fun SearchSection(
     onQueryChange: (String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        // Naslov sekcije - na maketi je čistije bele boje i malo veći
         Text(
             text = "SEARCH",
             color = Color.White,
@@ -50,20 +49,17 @@ fun SearchSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            shape = RoundedCornerShape(12.dp), // Blago zaobljene ivice kao na slici
+            shape = RoundedCornerShape(12.dp),
             singleLine = true,
             colors = TextFieldDefaults.colors(
-                // Glavna podešavanja boja
-                focusedContainerColor = Color(0xFF1F2033), // Tamna pozadina polja
+                focusedContainerColor = Color(0xFF1F2033),
                 unfocusedContainerColor = Color(0xFF1F2033),
                 disabledContainerColor = Color(0xFF1F2033),
 
-                // Sakrivanje donje linije (indikatora)
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
 
-                // Boje teksta i kursora
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White,
                 cursorColor = Color(0xFFE50914)
