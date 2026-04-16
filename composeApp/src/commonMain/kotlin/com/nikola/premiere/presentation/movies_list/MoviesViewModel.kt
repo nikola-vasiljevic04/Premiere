@@ -5,13 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.nikola.premiere.domain.usecase.GetMoviesUseCase
 import com.nikola.premiere.presentation.state.FilterData
 import com.nikola.premiere.presentation.state.FilterManager
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class MoviesViewModel (

@@ -6,7 +6,6 @@ import com.nikola.premiere.data.model.Video
 import com.nikola.premiere.domain.repository.MovieRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlin.coroutines.coroutineContext
 
 data class FullMovieData(
     val movie:Movie,

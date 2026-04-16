@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nikola.premiere.domain.usecase.GetMovieDetailsUseCase
-import com.nikola.premiere.presentation.movies_list.MoviesContract
 import com.nikola.premiere.presentation.navigation.movieIdOrThrow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

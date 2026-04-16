@@ -2,9 +2,7 @@ package com.nikola.premiere.presentation.filters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nikola.premiere.domain.usecase.GetGenresUseCase
-import com.nikola.premiere.presentation.movies_list.MoviesContract
 import com.nikola.premiere.presentation.state.FilterData
 import com.nikola.premiere.presentation.state.FilterManager
 import kotlinx.coroutines.flow.MutableSharedFlow
