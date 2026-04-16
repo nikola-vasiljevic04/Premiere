@@ -18,7 +18,9 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AppNavigation (
-    startDestination: String = "movies"
+    startDestination: String = "movies" ,
+    isDarkTheme: Boolean,
+    onThemeToggle: () -> Unit
 ){
     val navController = rememberNavController()
 
@@ -32,6 +34,7 @@ fun AppNavigation (
             val viewModel = koinViewModel<MoviesViewModel>()
             MoviesScreen(
                 viewModel= viewModel,
+                onThemeToggle = onThemeToggle,
                 onNavigateToDetails = {
                     movieId ->navController.navigateToMovieDetails(movieId)
                 },

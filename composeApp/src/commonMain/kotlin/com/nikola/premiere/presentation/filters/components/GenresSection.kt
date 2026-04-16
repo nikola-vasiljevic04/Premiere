@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,7 +31,7 @@ fun GenresSection(
     onGenreSelected: (Int?) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text("GENRES", color = Color.Gray, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+        Text("GENRES", color = MaterialTheme.colorScheme.onBackground, fontSize = 12.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
 
         when (genreState) {
@@ -38,14 +40,14 @@ fun GenresSection(
                     modifier = Modifier.fillMaxWidth().padding(32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CircularProgressIndicator(color = Color(0xFFE50914))
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
 
             is FiltersContract.GenreState.Error -> {
                 Text(
                     text = genreState.message,
-                    color = Color.Red,
+                    color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
@@ -62,15 +64,18 @@ fun GenresSection(
                         FilterChip(
                             selected = isSelected,
                             onClick = { onGenreSelected(genre.id) },
+                            shape = CircleShape,
                             label = {
                                 Text(
                                     text = genre.name,
-                                    color = if (isSelected) Color.White else Color.LightGray
                                 )
                             },
                             colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = Color(0xFFE50914),
-                                containerColor = Color(0xFF222222)
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+
+                                containerColor = MaterialTheme.colorScheme.surface,
+                                labelColor = MaterialTheme.colorScheme.onSurfaceVariant
                             ),
                             border = null
                         )
@@ -78,6 +83,5 @@ fun GenresSection(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
     }
 }

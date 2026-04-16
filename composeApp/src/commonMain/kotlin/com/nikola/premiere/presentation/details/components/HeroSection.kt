@@ -13,6 +13,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,7 +41,7 @@ fun HeroSection(
             onClick = onBackClicked,
             modifier = Modifier.padding(16.dp)
                 .align(Alignment.TopStart)
-                .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+                .background(Color.Black.copy(alpha = 0.4f), CircleShape)
         ){
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -52,7 +53,9 @@ fun HeroSection(
         if(firstTrailer != null){
             IconButton(
                 onClick = {onPlayClicked(firstTrailer.key)},
-                modifier = Modifier.size(64.dp).align(Alignment.Center).background(Color.Red,CircleShape)
+                modifier = Modifier.size(64.dp)
+                    .align(Alignment.Center)
+                    .background(MaterialTheme.colorScheme.primary, CircleShape)
             ){
                 Icon(
                     imageVector = Icons.Filled.PlayArrow,

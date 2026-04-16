@@ -18,7 +18,6 @@ interface FiltersContract {
 
     sealed interface Intent{
         data object LoadGenres: Intent
-
         data class ChangeSearchQuery(val query: String): Intent
         data class SelectGenre(val genreId: Int?): Intent
         data class SetMinRating(val rating: Float): Intent

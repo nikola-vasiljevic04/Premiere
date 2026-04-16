@@ -36,7 +36,6 @@ fun DetailsScreen(
         }
     }
     Scaffold(
-        containerColor = Color(0xFF121212)
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -45,7 +44,10 @@ fun DetailsScreen(
         ) {
             when (val currentState = state) {
                 is DetailsContract.State.Loading -> {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
 
                 is DetailsContract.State.Error -> {

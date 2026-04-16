@@ -19,6 +19,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -54,15 +55,14 @@ fun FiltersScreen(
         }
     }
     Scaffold (
-        containerColor = Color(0xFF121212),
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Filter Movies", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("Filter Movies", fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onBackground)
                     }
                 },
 
@@ -72,7 +72,7 @@ fun FiltersScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF121212)
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             )
         },
@@ -87,7 +87,7 @@ fun FiltersScreen(
                 Button(
                     onClick = { viewModel.setIntent(FiltersContract.Intent.ApplyFilters) },
                     modifier = Modifier.fillMaxWidth().height(50.dp), // Malo veće dugme za lakši klik
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914))
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Text("Apply Filters", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 }
@@ -96,9 +96,8 @@ fun FiltersScreen(
     ){paddingValues ->
         LazyColumn (
             modifier = Modifier.fillMaxSize().padding(paddingValues).padding(horizontal = 16.dp) ,
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp)
             ){
-            item { Spacer(modifier = Modifier.height(8.dp)) }
             item {
                 SearchSection(
                     searchQuery = state.searchQuery,

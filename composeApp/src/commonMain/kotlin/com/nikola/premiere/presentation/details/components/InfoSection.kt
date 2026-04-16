@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kotlin.math.round
 
 @Composable
 fun InfoSection(movie: com.nikola.premiere.data.model.Movie) {
@@ -26,7 +27,7 @@ fun InfoSection(movie: com.nikola.premiere.data.model.Movie) {
         Text(
             text = "INFO",
             style = MaterialTheme.typography.titleMedium,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -35,9 +36,6 @@ fun InfoSection(movie: com.nikola.premiere.data.model.Movie) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            val formatMoney = { amount: Long? ->
-                if (amount != null && amount > 0) "$${amount / 1_000_000}M" else "N/A"
-            }
 
             InfoCard(title = "Budget", value = formatMoney(movie.budget), modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(8.dp))
@@ -49,20 +47,39 @@ fun InfoSection(movie: com.nikola.premiere.data.model.Movie) {
         }
     }
 }
+fun formatMoney(amount: Long?): String {
+    if (amount == null || amount <= 0) return "N/A"
+
+    return when {
+        amount >= 1_000_000_000 -> {
+            val f = amount / 1_000_000_000f
+            "$${(round(f * 10) / 10).toString().removeSuffix(".0")}B"
+        }
+        amount >= 1_000_000 -> {
+            val f = amount / 1_000_000f
+            "$${(round(f * 10) / 10).toString().removeSuffix(".0")}M"
+        }
+        amount >= 1_000 -> {
+            val f = amount / 1_000f
+            "$${(round(f * 10) / 10).toString().removeSuffix(".0")}K"
+        }
+        else -> "$$amount"
+    }
+}
 @Composable
 fun InfoCard(title: String, value: String, modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
     ) {
         Column(
             modifier = Modifier.padding(vertical = 12.dp, horizontal = 4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = title, style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+            Text(text = title, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.background)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = value, style = MaterialTheme.typography.bodyMedium, color = Color.White, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+            Text(text = value, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.background, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
         }
     }
 }

@@ -45,7 +45,7 @@ fun MovieDetailsContent(
             Text(
                 text = "ACTORS",
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
             )
@@ -54,7 +54,7 @@ fun MovieDetailsContent(
             CastItem(person = person)
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                color = Color.DarkGray,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
                 thickness = 1.dp
             )
         }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -30,8 +31,13 @@ fun YearSection(
     onMaxYearChange:(Int?)-> Unit
 ){
     Column {
-        Text("YEAR RANGE", color = Color.Gray, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "YEAR RANGE",
+            color = MaterialTheme.colorScheme.onBackground,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(12.dp))
         Row (modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
             YearDropdown(
                 selectedValue = minYear,
@@ -40,7 +46,7 @@ fun YearSection(
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Text("—", color = Color.Gray)
+            Text("—", color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f))
             Spacer(modifier = Modifier.width(16.dp))
             YearDropdown(
                 selectedValue = maxYear,
@@ -48,11 +54,10 @@ fun YearSection(
                 onYearSelected = onMaxYearChange,
                 modifier = Modifier.weight(1f)
             )
-
         }
     }
-
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YearDropdown(
@@ -62,7 +67,6 @@ fun YearDropdown(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-
     val years = remember { (1900..2025).toList().reversed() }
 
     ExposedDropdownMenuBox(
@@ -74,16 +78,23 @@ fun YearDropdown(
             value = selectedValue,
             onValueChange = {},
             readOnly = true,
-            label = { Text(label, color = Color.Gray) },
+            label = { Text(label) },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
             },
+            shape = CircleShape,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                focusedTrailingIconColor = Color.White,
-                unfocusedTrailingIconColor = Color.Gray,
-                focusedBorderColor = Color.LightGray
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+
+                focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
             ),
             modifier = Modifier.menuAnchor()
         )

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -18,7 +19,7 @@ fun ImagesGallerySection(backdrops: List<com.nikola.premiere.data.model.ImageDet
         Text(
             text = "IMAGES",
             style = MaterialTheme.typography.titleMedium,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -38,7 +39,8 @@ fun ImagesGallerySection(backdrops: List<com.nikola.premiere.data.model.ImageDet
                     modifier = Modifier
                         .height(120.dp)
                         .aspectRatio(16f / 9f)
-                        .background(Color.DarkGray, MaterialTheme.shapes.medium)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surface)
                 )
             }
         }

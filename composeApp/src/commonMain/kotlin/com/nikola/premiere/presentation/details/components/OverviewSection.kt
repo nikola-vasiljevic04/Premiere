@@ -26,14 +26,14 @@ fun OverviewSection(overview: String?) {
         Text(
             text = "OVERVIEW",
             style = MaterialTheme.typography.titleMedium,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = overview ?: "No overview available.",
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.LightGray,
+            color = MaterialTheme.colorScheme.onBackground,
             lineHeight = 22.sp
         )
     }

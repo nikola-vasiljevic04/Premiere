@@ -36,15 +36,12 @@ class MoviesViewModel (
 
     init {
         viewModelScope.launch {
-            // Slušamo sve intente u pozadini
             intentFlow.collect { intent ->
                 handleIntent(intent)
             }
         }
         viewModelScope.launch {
             filterManager.activeFilters.collect { noviFilteri ->
-                // Okinuće se na samom početku (prazni filteri)
-                // i SVAKI PUT kad korisnik klikne "Apply" na Filter ekranu!
                 fetchMovies(sortBy = currentSortValue, filteri = noviFilteri)
             }
         }

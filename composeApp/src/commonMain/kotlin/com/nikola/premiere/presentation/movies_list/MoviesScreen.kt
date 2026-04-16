@@ -1,9 +1,11 @@
 package com.nikola.premiere.presentation.movies_list
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -49,11 +51,21 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.nikola.premiere.data.model.MovieListItem
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.SuggestionChipDefaults
+import org.jetbrains.compose.resources.painterResource
+import premiere.composeapp.generated.resources.Res
+import premiere.composeapp.generated.resources.ic_logo
+import kotlin.math.round
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun MoviesScreen(
     viewModel: MoviesViewModel,
+    onThemeToggle: () -> Unit,
     onNavigateToDetails: (String)-> Unit,
     onNavigateToFilters:()-> Unit
 ){
@@ -69,18 +81,35 @@ fun MoviesScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Premiere", fontWeight= FontWeight.Bold) },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(Res.drawable.ic_logo),
+                            contentDescription = "Premiere Logo",
+                            modifier = Modifier.size(28.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Premiere", fontWeight = FontWeight.Bold)
+                    }
+                },
                 actions = {
+                    IconButton(onClick = onThemeToggle) {
+                        Icon(
+                            imageVector = Icons.Filled.DarkMode,
+                            contentDescription = "Promeni temu",
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
                     Button(
-                        onClick = {viewModel.onFilterClicked()},
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                        onClick = { viewModel.onFilterClicked() },
+                        shape = CircleShape,
                         modifier = Modifier.padding(end = 8.dp)
-                    ){
+                    ) {
                         Text("Filters")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             )
         }
@@ -91,7 +120,10 @@ fun MoviesScreen(
         ){
             when(val currentState = state){
                 is MoviesContract.State.Loading->{
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.secondary ,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
                 is MoviesContract.State.Error ->{
                     Column(
@@ -100,7 +132,10 @@ fun MoviesScreen(
                     ){
                         Text(text = currentState.message, color = MaterialTheme.colorScheme.error)
                         Spacer(modifier = Modifier.height(8.dp))
-                        Button(onClick = { viewModel.setIntent(MoviesContract.Intent.LoadMovies) }) {
+                        Button(
+                            onClick = { viewModel.setIntent(MoviesContract.Intent.LoadMovies) },
+                            shape   = CircleShape,
+                        ) {
                             Text("Pokušaj ponovo")
                         }
                     }
@@ -109,7 +144,8 @@ fun MoviesScreen(
                     Text(
                         text = "No movies found",
                         modifier = Modifier.align(Alignment.Center),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
                 is MoviesContract.State.Success ->{
@@ -157,19 +193,26 @@ fun SortBar(
     ){
         Box{
             FilterChip(
-                selected = true,
+                selected = false,
                 onClick = {expanded = true},
-                label = {Text("Sort: $currentSort⬇")}
+                label = {Text("Sort: $currentSort⬇")},
+                shape = CircleShape,
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    labelColor = MaterialTheme.colorScheme.onSurface
+                ),
+                border = null
             )
         }
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = {expanded = false},
+            containerColor = MaterialTheme.colorScheme.surface
         ){
             val options = listOf("imdb_rating", "year", "title", "popularity")
             options.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option) },
+                    text = { Text(option,color = MaterialTheme.colorScheme.onSurface) },
                     onClick = {
                         onSortChanged(option)
                         expanded = false
@@ -177,7 +220,7 @@ fun SortBar(
                 )
             }
         }
-        Text(text = "$totalMovies movies", style = MaterialTheme.typography.bodySmall)
+        Text(text = "$totalMovies movies", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
     }
 }
 
@@ -191,17 +234,23 @@ fun MovieCard(
             .fillMaxWidth()
             .height(140.dp)
             .clickable { onClick() },
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ){
-    Row{AsyncImage(
+    Row(
+        modifier = Modifier.fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        AsyncImage(
         model = "https://image.tmdb.org/t/p/w185${movie.posterPath}",
         contentDescription = movie.title,
         contentScale = ContentScale.Crop,
         modifier = Modifier
+            .padding(8.dp)
             .width(92.dp)
             .fillMaxHeight()
-            .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
+            .clip(RoundedCornerShape(12.dp))
             .background(Color.DarkGray)
     )
 
@@ -218,7 +267,8 @@ fun MovieCard(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = movie.year?.toString() ?: "N/A",
@@ -231,34 +281,65 @@ fun MovieCard(
                 Icon(
                     imageVector = Icons.Filled.Star,
                     contentDescription = "Rating",
-                    tint = Color.Yellow,
+                    tint = Color(0xFFFFC107),
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = movie.imdbRating?.toString() ?: "N/A",
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "${movie.imdbVotes ?: 0} votes",
+                    text = "${formatVotes(movie.imdbVotes) ?: 0} votes",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+           //za ucitavanje zanrova ako je landscape da uzme vise od 2
+            BoxWithConstraints {
+                val availableWidth = maxWidth
 
+                val genreCount = when {
+                    availableWidth > 400.dp -> 7
+                    availableWidth > 250.dp -> 5
+                    else -> 2
+                }
             // zanrovi
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                movie.genres.take(2).forEach { genre ->
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                movie.genres.take(genreCount).forEach { genre ->
                     SuggestionChip(
                         onClick = { },
                         label = { Text(genre.name, style = MaterialTheme.typography.labelSmall) },
-                        modifier = Modifier.height(24.dp)
+                        shape = CircleShape,
+                        colors = SuggestionChipDefaults.suggestionChipColors(
+                            containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f),
+                            labelColor = MaterialTheme.colorScheme.onSurface
+                        ),
+                        border = SuggestionChipDefaults.suggestionChipBorder(
+                            enabled = true,
+                            borderColor = MaterialTheme.colorScheme.onSurface
+                        ),
+                        modifier = Modifier.height(25.dp)
                     )
                 }
+            }
             }
         }
 
     }
     }
+}
+private fun formatVotes(votes: Int?): String = when {
+    votes == null -> "0"
+    votes >= 1_000_000 -> {
+        val f = votes / 1_000_000f
+        "${(round(f * 10f) / 10f).toString().removeSuffix(".0")}M"
+    }
+    votes >= 1_000 -> {
+        val f = votes / 1_000f
+        "${(round(f * 10f) / 10f).toString().removeSuffix(".0")}K"
+    }
+    else -> votes.toString()
 }

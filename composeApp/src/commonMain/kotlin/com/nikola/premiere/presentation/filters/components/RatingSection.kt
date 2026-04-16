@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -22,7 +23,7 @@ fun RatingSection(
     onRatingChange: (Float) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text("MINIMUM RATING", color = Color.Gray, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+        Text("MINIMUM RATING", color = MaterialTheme.colorScheme.onBackground , fontSize = 12.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
 
         val displayRating = (minRating * 10.0).roundToInt() / 10.0
@@ -31,9 +32,22 @@ fun RatingSection(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("0.0", color = Color.Gray)
-            Text(text = "$displayRating+", color = Color.White, fontWeight = FontWeight.Bold)
-            Text("10.0", color = Color.Gray)
+            Text(
+                text = "0.0",
+                // Bleđa boja da ne skreće pažnju
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+            )
+            Text(
+                text = "$displayRating+",
+                // Sada je broj RacingRed boje, slaže se sa klizačem!
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+            Text(
+                text = "10.0",
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+            )
         }
 
         Slider(
@@ -41,9 +55,9 @@ fun RatingSection(
             onValueChange = onRatingChange,
             valueRange = 0f..10f,
             colors = SliderDefaults.colors(
-                thumbColor = Color(0xFFE50914),
-                activeTrackColor = Color(0xFFE50914),
-                inactiveTrackColor = Color.DarkGray
+                thumbColor = MaterialTheme.colorScheme.primary,
+                activeTrackColor = MaterialTheme.colorScheme.primary,
+                inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
             )
         )
     }
